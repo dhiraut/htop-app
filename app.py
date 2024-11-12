@@ -11,13 +11,11 @@ def home():
 
 @app.route('/htop')
 def htop():
-    # System information
-    name = "Dhiraj Kumar Raut"  # Your full name
-    username = os.getenv("USER") or os.getenv("USERNAME")  # System username
-    server_time = datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S')  # Server time in IST
-    top_output = get_top_output()  # Get top processes
+    name = "Dhiraj Kumar Raut" 
+    username = os.getenv("USER") or os.getenv("USERNAME")  
+    server_time = datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S')  
+    top_output = get_top_output()  
 
-    # Return HTML page with the information
     return f"""
     <html>
     <body>
@@ -32,16 +30,13 @@ def htop():
     """
 
 def get_top_output():
-    # Getting top output (like `htop` would)
     processes = []
     for proc in psutil.process_iter(['pid', 'name', 'username', 'cpu_percent', 'memory_info']):
         try:
             processes.append(f"PID: {proc.info['pid']}, Name: {proc.info['name']}, CPU: {proc.info['cpu_percent']}%, Memory: {proc.info['memory_info'].rss / (1024 * 1024):.2f} MB")
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass  # Handle processes that may terminate during iteration
-    
-    return "\n".join(processes[:10])  # Just showing top 10 processes
+            pass  
+    return "\n".join(processes[:10]) 
 
 if __name__ == '__main__':
-    # Run the Flask app on all network interfaces (0.0.0.0) to be accessible externally in GitHub Codespaces
     app.run(host='0.0.0.0', port=5000)
